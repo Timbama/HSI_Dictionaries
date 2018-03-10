@@ -13,7 +13,7 @@ if __name__ == '__main__':
             print(name)
             print(node)
 
-    #f.visititems(list_dataset)
+    f.visititems(list_dataset)
     #Creates a varible to store the path to the relectance dataset
     tall_refl = f['TALL']['Reflectance']
     print(tall_refl)
