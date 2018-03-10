@@ -25,8 +25,6 @@ print(ext.extract_pixel(1,1,data))
 print('Selecting a training set... ')
 t0 = time()
 train_pixels = ext.extract_pixel_random(numOfTrain, dim, data)
-train_pixels -= np.mean(train_pixels, axis=0)
-train_pixels /= np.std(train_pixels, axis=0)
 print(train_pixels)
 dt = time() - t0
 print('done in %.2fs.' % dt)
@@ -44,7 +42,6 @@ print("finding test pixel")
 t0 = time()
 noise = np.random.normal(0,1,220)
 test_pixel = ext.extract_pixel(1, 1, data)
-#test_pixel = test_pixel - np.mean(test_pixel, axis=0)
 print(test_pixel)
 corrupt_test_pixel = test_pixel + noise
 dt = time() - t0
