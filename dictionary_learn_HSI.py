@@ -1,19 +1,13 @@
 from time import time
-import matplotlib.pyplot as plt
 import numpy as np
-import scipy as sp
-import matplotlib.pyplot as plt
-import pandas as pd
 import extract_data as ext
 #from sklearn.decomposition import MiniBatchDictionaryLearning
 from sklearn.decomposition import DictionaryLearning
 from sklearn.externals import joblib
-import pickle
 #File name for dictionary model
 dict_file = 'dictionary.pkl'
 #Data path in file
 dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
-#filename = dataPath + '19920612_AVIRIS_IndianPine_Site3.tif'
 filename = dataPath + 'PaviaU.mat'
 #the number of trian samples
 numOfTrain = 5000
@@ -26,14 +20,18 @@ data = ext.initialize_file(filename)
 dt = time() - t0
 print('done in %.2fs.' % dt)
 print("Initialized data set with shape" , data.shape)
-
+print(np.amax(data))
+print(np.amin(data))
+print(np.mean(data))
+print(np.std(data))
 #Select a training set
 print('Selecting a training set... ')
 
 train_pixels = ext.extract_pixel_random(numOfTrain, data)
 dt = time() - t0
 print('done in %.2fs.' % dt)
-print(train_pixels.shape)
+print(train_pixels)
+
 
 print('Learning Dictionary')
 t0 = time()

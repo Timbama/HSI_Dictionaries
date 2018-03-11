@@ -4,6 +4,7 @@ import csv
 import random
 from scipy import io
 import os.path
+from USG_data_paths import dataPath, sensor_type, spectra_types
 def initialize_file(filename):
     extension = os.path.splitext(filename)[1]
 
@@ -42,3 +43,35 @@ def first_lower(s):
       return s
     else:
       return s[0].lower() + s[1:]
+def get_spectra(types, sensor, filename=None):
+    path = dataPath + sensor_type[sensor]  + '/' + spectra_types[types] + '/'
+    directory = os.fsencode(path)
+    print(path + os.listdir(directory)[0].decode())
+    size = simplecount(path + os.listdir(directory)[0].decode())
+    data = np.array([]).reshape(0,size-1)
+    for file in os.listdir(directory):
+        i = 0
+        temp = []
+        print(file.decode())
+        f = open(path + file.decode(), 'r')
+        for line in f:
+            if(i==0):
+                i+=1
+            else:
+                numline = float(line)
+                if(numline == -1.23e34):
+                    numline = np.nan
+                numline = numline*6000
+                temp.append(numline)
+        temp  = np.array(temp)
+        data = np.vstack([data, temp])
+    print(data.shape)
+    return data 
+
+#def get_random_sampels(num, path):
+def simplecount(filename):
+    lines = 0
+    f = open(filename, 'r')
+    for line in f:
+        lines += 1
+    return lines

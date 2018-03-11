@@ -1,13 +1,21 @@
+from time import time
 from scipy import io
 import h5py
-dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
-mat_file = io.loadmat(dataPath + 'PaviaU.mat')
-mat_file.keys()
-print(mat_file.keys())
-data_globals = mat_file['__globals__']
-print(data_globals)
-data_header = mat_file['__header__']
-print(data_header)
-data_version = mat_file['__version__']
-data = mat_file['paviaU']
-print(data)
+import numpy as np
+from extract_data import get_spectra
+t0 = time()
+d = get_spectra('Vegetation', 'AVIRIS2014' )
+
+dt = time() - t0
+print('done in %.2fs.' % dt)
+print(d)
+print(np.nanmax(d))
+print(np.nanmin(d))
+print(np.nanmean(d))
+print(np.nanstd(d))
+d = 6000*d
+print(d)
+print(np.nanmax(d))
+print(np.nanmin(d))
+print(np.nanmean(d))
+print(np.nanstd(d))
