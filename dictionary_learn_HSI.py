@@ -10,7 +10,7 @@ dict_file = 'dictionary.pkl'
 dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
 filename = dataPath + 'PaviaU.mat'
 #the number of trian samples
-numOfTrain = 5000
+numOfTrain = 250
 testX = 10
 testY = 10
 #import the data and wavelengths
