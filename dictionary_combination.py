@@ -7,6 +7,7 @@ from sklearn.preprocessing import Imputer
 dict_file = 'dictionary.pkl'
 #Data path in file
 dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
+#dataPath = 'G:/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/ASCIIdata'
 filename = dataPath + 'PaviaU.mat'
 n_components = 150
 #the number of trian samples
