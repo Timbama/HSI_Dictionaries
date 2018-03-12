@@ -7,7 +7,7 @@ t0 = time()
 d = get_spectra('Vegetation', 'AVIRIS2014' )
 dt = time() - t0
 print('done in %.2fs.' % dt)
-print(d)
+print(d.shape)
 print(np.nanmax(d))
 print(np.nanmin(d))
 print(np.nanmean(d))

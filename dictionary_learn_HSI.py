@@ -30,7 +30,7 @@ print('Selecting a training set... ')
 train_pixels = ext.extract_pixel_random(numOfTrain, data)
 dt = time() - t0
 print('done in %.2fs.' % dt)
-print(train_pixels)
+print(train_pixels.shape)
 
 
 print('Learning Dictionary')

@@ -64,8 +64,7 @@ def get_spectra(types, sensor, filename=None):
                 numline = numline*6000
                 temp.append(numline)
         temp  = np.array(temp)
-        data = np.vstack([data, temp])
-    print(data.shape)
+        data = np.vstack([data, temp])  
     return data 
 
 #def get_random_sampels(num, path):
