@@ -2,7 +2,7 @@ from time import time
 from scipy import io
 import h5py
 import numpy as np
-from extract_data import get_spectra
+from extract_data.extract_data import get_spectra
 t0 = time()
 d = get_spectra('Vegetation', 'AVIRIS2014' )
 dt = time() - t0
