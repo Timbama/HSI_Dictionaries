@@ -2,7 +2,7 @@ import numpy as np
 import tifffile as tif
 import csv
 import random
-from scipy import io
+from scipy.io import loadmat
 import os.path
 from USG_data_paths import dataPath, sensor_type, spectra_types
 def initialize_file(filename):
@@ -15,7 +15,7 @@ def initialize_file(filename):
         name = os.path.splitext(filename)[0]
         name = os.path.basename(name)
         name = first_lower(name)
-        mat_file = io.loadmat(filename)
+        mat_file = loadmat(filename)
         mat_file.keys()
         data = mat_file[name]
         data = np.array(data)

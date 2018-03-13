@@ -7,7 +7,7 @@ from sklearn.preprocessing import Imputer
 dict_file = 'dictionary.pkl'
 #Data path in file
 #dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
-dataPath = 'G:/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/ASCIIdata'
+dataPath = 'C:/Users/Timothy/OneDrive - Kennesaw State University/data/Data/'
 filename = dataPath + 'PaviaU.mat'
 n_components = 150
 #the number of trian samples
@@ -64,5 +64,7 @@ print(code_mat_1.shape, code_mat_2.shape)
 
 print('Find an index set for the non zero compenets of a')
 
-index1 = sparse.find_nonzero(code_mat_1)
-print(index1)
+index1 = np.transpose(np.nonzero(code_mat_1))
+print(index1.shape)
+index2 = np.transpose(np.nonzero(code_mat_2))
+print(index2.shape)
