@@ -74,3 +74,15 @@ def simplecount(filename):
     for line in f:
         lines += 1
     return lines
+def addPadding(data):
+    data_pad = np.empty((data.shape[0]+2, data.shape[1]+2, 0))
+    print(data_pad.shape)
+    for x in range(data.shape[2]):
+        print(np.pad(data[:,:,x], 1, 'mean').shape)
+        data_temp = np.pad(data[:,:,x], 1, 'mean')
+        data_temp = np.expand_dims(data_temp, axis=0)
+        data_temp = np.reshape(data_temp, (data_temp.shape[1], data_temp.shape[2], data_temp.shape[0]))
+        print(data_temp.shape)
+        data_pad = np.append(data_pad, data_temp, axis=2)
+        print(data_pad.shape)
+    return data_pad
