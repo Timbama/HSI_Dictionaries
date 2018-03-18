@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import extract_data as ext
+import Preprocessing.extract_data as ext
 
 #Setup the pixels as data frames and plot the spectrums for comparison
 """
