@@ -66,6 +66,6 @@ def get_spectra(types, sensor, filename=None):
 def simplecount(filename):
     lines = 0
     f = open(filename, 'r')
-    for line in f:
+    for lines in f:
         lines += 1
     return lines
