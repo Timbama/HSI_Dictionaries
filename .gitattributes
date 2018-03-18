@@ -5,3 +5,4 @@ mask.npy filter=lfs diff=lfs merge=lfs -text
 high_data.npy filter=lfs diff=lfs merge=lfs -text
 Figure_1.png filter=lfs diff=lfs merge=lfs -text
 sparse_coded_data.npy filter=lfs diff=lfs merge=lfs -text
+Data/** filter=lfs diff=lfs merge=lfs -text
