@@ -1,5 +1,5 @@
 import numpy as np
-from extract_data import initialize_file, extract_pixel
+from modules.extract_data import initialize_file, extract_pixel
 
 def create_mask(data):
     data_pad = addPadding(data)

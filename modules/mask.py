@@ -1,7 +1,7 @@
 from time import time
 import numpy as np
-from segmentation import create_mask, apply_mask
-from extract_data import initialize_file
+from modules.segmentation import create_mask, apply_mask
+from modules.extract_data import initialize_file
 import matplotlib.pyplot as plt
 
 dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
