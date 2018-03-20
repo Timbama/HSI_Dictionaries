@@ -1,33 +1,35 @@
 import numpy as np
 from extract_data import initialize_file, extract_pixel
-
-def create_mask(data):
-    data_pad = addPadding(data)
-    mask = np.zeros(shape=(data.shape[0],data.shape[1]))
-    mask_high = np.zeros(shape=(data.shape[0],data.shape[1]))
-    mask_low = np.zeros(shape=(data.shape[0],data.shape[1]))
-    for x in range(data.shape[0]):
-        for y in range(data.shape[1]):
-            center = extract_pixel(x,y, data)
-            window = np.zeros(shape=(data.shape[2],0))
+from sklearn.preprocessing import normalize
+def create_SAD_mat(data):
+    print(data.shape)
+    mask = np.zeros(shape=(data.shape[0]-2,data.shape[1]-2))
+    for x in range(data.shape[0]-2):
+        for y in range(data.shape[1]-2):
+            center = extract_pixel(x,y, data).transpose()
+            norm = np.linalg.norm(center)
             for z in range(3):
                 for n in range(3):
-                    window = np.hstack((window, extract_pixel(z+x,n+y,data_pad).transpose()))
-            for f in range(window.shape[1]):
-                mask[x][y] = np.add(mask[x,y], np.mean(np.linalg.norm(center.transpose().flatten() - window[:,f])))
+                    other = extract_pixel(z+x,n+y,data).transpose()
+                    norm_other = np.linalg.norm(other)
+                    mask[x][y] = np.mean(np.arccos((center*other)/(norm*norm_other)))
+        #if x%10 == 0:
+           # print('X ',x,'Y ',y)
+    mask = normalize(mask)  
+    return mask    
+def threshold_mask(mask):
+    mask_high = np.zeros(shape=(mask.shape[0],mask.shape[1]),dtype=np.int64)
+    mask_low = np.zeros(shape=(mask.shape[0],mask.shape[1]), dtype=np.int64)
     for x in range(mask.shape[0]):
         for y in range(mask.shape[1]):
             if(mask[x,y] < np.mean(mask)):
                 mask_high[x,y] = 0
             else:
                 mask_high[x,y] = 1
-    for x in range(mask.shape[0]):
-        for y in range(mask.shape[1]):
-            if(mask_high[x,y] == 1):
-                mask_low[x,y] = 0
-            else:
-                mask_low[x,y] = 1
+    mask_low = np.invert(mask_high)
+    print(mask.shape)
     return mask_high, mask_low
+
 def addPadding(data):
     data_pad = np.empty((data.shape[0]+2, data.shape[1]+2, 0))
     for x in range(data.shape[2]):
