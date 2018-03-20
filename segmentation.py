@@ -1,5 +1,5 @@
 import numpy as np
-from modules.extract_data import initialize_file, extract_pixel
+from extract_data import initialize_file, extract_pixel
 
 def create_mask(data):
     data_pad = addPadding(data)
@@ -17,7 +17,7 @@ def create_mask(data):
                 mask[x][y] = np.add(mask[x,y], np.mean(np.linalg.norm(center.transpose().flatten() - window[:,f])))
     for x in range(mask.shape[0]):
         for y in range(mask.shape[1]):
-            if(mask[x,y] < np.mean(mask)+8000):
+            if(mask[x,y] < np.mean(mask)):
                 mask_high[x,y] = 0
             else:
                 mask_high[x,y] = 1

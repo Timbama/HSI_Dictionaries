@@ -1,10 +1,10 @@
 from time import time
 import numpy as np
-from modules.segmentation import create_mask, apply_mask
-from modules.extract_data import initialize_file
+from segmentation import create_mask, apply_mask
+from extract_data import initialize_file
 import matplotlib.pyplot as plt
 
-dataPath = 'G:/timba/Documents/Hyperspectral project/Data/'
+dataPath = 'C:/Users/Timothy/HSI_Dictionaries/Data/Hyperspectral Images/'
 
 file_name = dataPath + 'paviaU.mat'
 low_path = 'low_mask.npy'
@@ -26,3 +26,5 @@ np.save('low_data', low_data)
 np.save('high_data', high_data)
 dt = time() - t0
 print('done in %.2fs.' % dt)
+plt.imshow(high_data)
+plt.show()
