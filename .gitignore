@@ -4,6 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 # User-specific files
 /Data/ASCIIdata
+USGS_data_path_Laptop.py
+USG_data_paths.py
 *.suo
 *.user
 *.userosscache

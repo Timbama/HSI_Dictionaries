@@ -36,5 +36,4 @@ sensor_type = {'splib07a': 'ASCIIdata_splib07a',
 'Sentinel12': 'ASCIIdata_splib07b_rsSentinel2',
 'WorldView3': 'ASCIIdata_splib07b_rsWorldView3'}
 
-#dataPath = 'G:/timba/Documents/Hyperspectral project/Data/ASCIIdata/'
 dataPath = 'C:/Users/Timothy/OneDrive - Kennesaw State University/data/ASCIIdata/'

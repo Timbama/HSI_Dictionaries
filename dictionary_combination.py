@@ -1,7 +1,7 @@
 from time import time
 import numpy as np
-import modules.extract_data as ext
-import modules.sparse_code as sparse
+import extract_data as ext
+import sparse_code as sparse
 from sklearn.preprocessing import Imputer
 #File name for dictionary model
 dict_file = 'dictionary.pkl'
