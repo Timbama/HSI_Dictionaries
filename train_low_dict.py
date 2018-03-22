@@ -2,6 +2,7 @@ from time import time
 import numpy as np
 import extract_data as ext
 import sparse_code as sparse
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import Imputer
 from sklearn.decomposition import DictionaryLearning
 from sklearn.linear_model import OrthogonalMatchingPursuit
@@ -11,11 +12,13 @@ from sklearn.externals import joblib
 from sklearn.preprocessing import normalize
 dict_file = 'dictionary.pkl'
 
-train_pixels = np.load('C:/Users/Timothy/HSI_Dictionaries/Data/Intermediate Data/' + 'low_data.npy')
+train_pixels = np.load('G:/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/Data/' + 'low_data.npy')
 print(train_pixels.shape)
 train_pixels = train_pixels[0:1000,0:train_pixels.shape[1]]
-train_pixels = normalize(train_pixels)
+train_pixels = (train_pixels-np.amin(train_pixels))/(np.amax(train_pixels)-np.amin(train_pixels))
 print(train_pixels.shape)
+print(np.amax(train_pixels))
+print(np.amin(train_pixels))
 n_components = 250
 alpha = 10
 max_iterations = 1000
@@ -46,10 +49,16 @@ omp = OrthogonalMatchingPursuit(tol=tol, normalize=True, fit_intercept=True)
 omp.fit(D_trans, train_pixels_trans)
 
 code = omp.coef_
+code = (code-np.amin(code))/(np.amax(code)-np.amin(code))
+code = code.transpose()
+
+print(np.amax(code))
+print(np.amin(code))
+print(np.mean(code))
 print(code.shape)
 print(D.shape)
 print(train_pixels.shape)
-for x in range(D.shape[0]):
+for x in range(D.shape[1]):
     coef_atom = code[:,x]
     index = np.zeros(0, dtype=np.int64)
     for y in range(n_samples):
@@ -59,4 +68,4 @@ for x in range(D.shape[0]):
     #extract data for each atom in D
     update = train_pixels[index,:]
 
-print(code.shape)
+print(update.shape)
