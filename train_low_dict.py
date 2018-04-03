@@ -4,15 +4,16 @@ import extract_data as ext
 import sparse_code as sparse
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import Imputer
-from sklearn.decomposition import DictionaryLearning, sparse_encode, dict_learning_online
+from sklearn.decomposition import DictionaryLearning
 from sklearn.linear_model import OrthogonalMatchingPursuit
+from sklearn.linear_model import Lasso
 from sklearn.datasets import make_sparse_coded_signal
+from sklearn.decomposition import sparse_encode
 from sklearn.externals import joblib
 from sklearn.preprocessing import normalize
-from USGS_data_path_Laptop import dataPath_HSI
 dict_file = 'dictionary.pkl'
 
-train_pixels = np.load(dataPath_HSI + 'low_data.npy')
+train_pixels = np.load('G:/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/Data/' + 'low_data.npy')
 print(train_pixels.shape)
 train_pixels = train_pixels[0:1000,0:train_pixels.shape[1]]
 train_pixels = (train_pixels-np.amin(train_pixels))/(np.amax(train_pixels)-np.amin(train_pixels))
@@ -24,23 +25,16 @@ alpha = 10
 max_iterations = 1000
 fit_algo = 'cd'
 tol = 1e-6
-
-
-n_features = train_pixels.shape[1]
-n_samples = train_pixels.shape[0]
-n_nonzero_coefs = 10
-
-print("Initilizing data set")
+"""
+print('Finding dictionary')
 t0 = time()
-code, low_dictionary = dict_learning_online(train_pixels, n_components=n_components, alpha=1, n_iter=max_iterations, method='cd', verbose=False)
+
+dico = DictionaryLearning(n_components=n_components, alpha=alpha, max_iter=max_iterations, tol=tol, transform_algorithm='omp' , fit_algorithm=fit_algo)
+
+dictionay = dico.fit(train_pixels).components_
 dt = time() - t0
-print('done in %.2fs.' % dt)
 
-
-
-
-
-
+joblib.dump(dico, dict_file)
 """
 #log file
 
@@ -52,8 +46,10 @@ D = train_pixels[0:n_components,0:train_pixels.shape[1]]
 D_trans = D.transpose()
 print(D.shape)
 train_pixels_trans = train_pixels.transpose()
-omp = OrthogonalMatchingPursuit(tol=tol, normalize=True, fit_intercept=True)
-omp.fit(D_trans, train_pixels_trans)
+
+
+#omp = OrthogonalMatchingPursuit(tol=tol, normalize=True, fit_intercept=True)
+#omp.fit(D_trans, train_pixels_trans)
 
 code = omp.coef_
 code = (code-np.amin(code))/(np.amax(code)-np.amin(code))
@@ -74,5 +70,5 @@ for x in range(D.shape[1]):
     print(index.shape)
     #extract data for each atom in D
     update = train_pixels[index,:]
-"""
+
 print(update.shape)
