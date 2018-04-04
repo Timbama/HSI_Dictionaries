@@ -1,34 +1,58 @@
 import numpy as np
 from USG_data_paths import dataPath_HSI
 import matplotlib.pyplot as plt
-from sklearn.linear_model import OrthogonalMatchingPursuit
+from extract_data import get_spectral_library, create_sample, normalize, convert_library
+from create_hsi import create_hsi
 from sklearn.decomposition import sparse_encode
-from sklearn.preprocessing import normalize
-from time import time
-n_samples = 1000
-n_components = 200
-tol = 1e-3
-max_iter = 1000
-print('Loading, normalizing and selecting training data')
-t0 = time()
-#load data
-data = np.load(dataPath_HSI  + 'high_data.npy')
-#normalize data set
-data_norm = (data-np.amin(data))/(np.amax(data)-np.amin(data))
-#select data to train dictionary
-random_index = np.random.choice(data_norm.shape[0],size=n_samples,replace=False)
-train_data  = data_norm[random_index,:]
-dt = time() - t0
-print('done in %.2fs.' % dt)
-dictionary = data_norm[0:n_components,:]
-code = sparse_encode(train_data, dictionary, algorithm='omp',max_iter=max_iter, n_nonzero_coefs=100)
-print(code.shape)
-residual = train_data - np.matmul(code, dictionary)
-print(residual.shape)
-print(np.mean(residual))
-for i in range(2):
-    I = np.nonzero(code)[0]
-    print(I)
-    residual_i = residual[I]
-    print(residual_i.shape)
+from sklearn.preprocessing import Imputer
+library = get_spectral_library('AVIRIS2014','Minerals')
+samples, names = create_sample(library)
+print(np.nanmax(samples))
+print(np.nanmin(samples))
+samples = normalize(samples)
+print(samples.shape)
+print(np.nanmax(samples))
+print(np.nanmin(samples))
+print(len(library))
 
+image = create_hsi(samples)
+print(image.shape)
+
+data = np.reshape(image, (image.shape[0]*image.shape[1], image.shape[2]))
+print(data.shape)
+
+dictionary =  convert_library(library)
+print(dictionary.shape)
+imputer_data = Imputer()
+imputer_dict = Imputer()
+imputer_data.fit(data)
+imputer_dict.fit(dictionary)
+data = imputer_data.transform(data)
+dictionary = imputer_dict.transform(dictionary)
+sparse = sparse_encode(data, dictionary, algorithm='lasso_lars', max_iter=200000, n_nonzero_coefs=20, alpha=2)
+
+print(sparse.shape)
+
+#output = np.reshape(sparse, (75,75,224))
+numbers = []
+for n in names:
+    iter = 0
+    for keys in sorted(library.keys()):
+        iter += 1
+        if n == keys:
+            numbers.append(iter)
+print(numbers)
+used = np.zeros((data.shape[0],0))
+for num in numbers:
+    temp = np.reshape(sparse[:,num], (sparse.shape[0],1))
+    used = np.hstack((used, temp))
+    print(np.sum(temp))
+print(used.shape)
+
+image = np.reshape(used,(75,75,5))
+image = np.reshape(used[:,2], (75,75))
+print(used)
+#for i in range(5): 
+    #print(np.sum(image[:,:,i]))
+plt.imshow(image[:,:])
+plt.show()

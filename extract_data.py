@@ -115,15 +115,23 @@ def get_spectral_library(sensor, types):
             temp  = np.array(temp)
             data[prev_mat] = temp
             prev_mat = split_at(f.name,'_', 5)
-            print(prev_mat)
             first = False
+    max = 0.0
+    min = 10000.0    
+    for keys in data.keys():
+        if np.nanmax(data[keys]) > max:
+            max = np.nanmax(data[keys])
+    for keys in data.keys():
+        if np.nanmin(data[keys]) < min:
+            min = np.nanmin(data[keys])
+    for keys in data.keys():
+        data[keys] = normalize(data[keys], max, min)
     return data
 def split_at(input, delimiter, n):
     words = input.split(delimiter)
     data = words[n]
     return data
-def create_sample(library, sensor, types):
-    library = get_spectral_library(sensor, types)
+def create_sample(library):
     names = []
     names.append(random.sample(list(library.keys()), 5))
     names = names[0]
@@ -134,4 +142,17 @@ def create_sample(library, sensor, types):
     for n in names:
         temp = library[n]
         samples = np.vstack([samples, temp])
-    return samples
+    return samples, names
+def normalize(data, max=None, min=None):
+    if max == None:
+        max = np.nanmax(data)
+    if min == None:
+        min = np.nanmin(data)
+    return (data - min)/(max-min)
+def convert_library(library):
+    data = np.zeros((len(library), len(library[random.choice(list(library.keys()))])))
+    counter = 0
+    for keys in sorted(library.keys()):
+        data[counter, :] = library[keys]
+        counter += 1
+    return data
