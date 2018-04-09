@@ -156,3 +156,22 @@ def convert_library(library):
         data[counter, :] = library[keys]
         counter += 1
     return data
+def prune_library(library, min_angle):
+    r = list(library.keys())
+    c = list(library.keys())
+    to_delete = []
+    for key1 in r:
+        sample = library[key1]
+        sample = np.array(sample)
+        sample_norm = np.linalg.norm(sample)
+        for key2 in c:
+            compare = library[key2]
+            compare = np.array(compare)
+            compare_norm = np.linalg.norm(compare)
+            diff = np.mean(np.arccos((sample*compare)/(sample_norm*compare_norm)))
+            print(diff)
+            if diff < min_angle:
+                to_delete.append(key1)
+                break
+    print(to_delete)
+    return library

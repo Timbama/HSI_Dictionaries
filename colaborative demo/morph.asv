@@ -1,0 +1,10 @@
+function X_hat = morph(X)
+%MORPH Summary of this function goes here
+%   Detailed explanation goes here
+r =10;
+SE = strel('line',r,90);
+%SE2 = strel('line',r,0);
+X_hat = imo(X,SE);
+%X_hat = imerode(X_hat,SE2);    
+end
+

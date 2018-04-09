@@ -1,7 +1,7 @@
 import numpy as np
 from USG_data_paths import dataPath_HSI
 import matplotlib.pyplot as plt
-from extract_data import get_spectral_library, create_sample, normalize, convert_library
+from extract_data import get_spectral_library, create_sample, normalize, convert_library, prune_library
 from create_hsi import create_hsi, abundance_map
 from sklearn.decomposition import sparse_encode
 from sklearn.preprocessing import Imputer
@@ -21,7 +21,6 @@ print(image.shape)
 abundance = abundance_map((.5, .33333, .25, .2), 1, (75,75))
 data = np.reshape(image, (image.shape[0]*image.shape[1], image.shape[2]))
 print(data.shape)
-
 dictionary =  convert_library(library)
 print(dictionary.shape)
 imputer_data = Imputer()
@@ -30,6 +29,9 @@ imputer_data.fit(data)
 imputer_dict.fit(dictionary)
 data = imputer_data.transform(data)
 dictionary = imputer_dict.transform(dictionary)
+
+
+
 sparse = sparse_encode(data, dictionary, algorithm='lasso_cd', max_iter=1000, n_nonzero_coefs=20, alpha=2)
 
 print(sparse.shape)
