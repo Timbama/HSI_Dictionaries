@@ -8,7 +8,7 @@ h = .025
 mu = .5
 lamb = .005
 gamma = .005
-
+n_iter = 1000
 library = get_spectral_library('AVIRIS2014','Minerals')
 samples, names = create_sample(library)
 samples = normalize(samples)
@@ -16,31 +16,40 @@ samples = normalize(samples)
 image = create_hsi(samples)
 print(image.shape)
 
-data = np.reshape(image, (image.shape[0]*image.shape[1], image.shape[2]))
-print(data.shape)
+Y = np.reshape(image, (image.shape[0]*image.shape[1], image.shape[2]))
+print(Y.shape)
 
 dictionary =  convert_library(library)
 print(dictionary.shape)
 imputer_data = Imputer()
 imputer_dict = Imputer()
-imputer_data.fit(data)
+imputer_data.fit(Y)
 imputer_dict.fit(dictionary)
-data = imputer_data.transform(data)
-dictionary = imputer_dict.transform(dictionary)
+data = imputer_data.transform(Y)
+M = imputer_dict.transform(dictionary)
 
-#X = sparse_encode(data, )
+X = sparse_encode(data, dictionary)
 
-V1 = np.ones((data.shape))
-V2 = np.ones((data.shape))
-V3 = np.ones((data.shape))
-V4 = np.ones((data.shape))
+shape = X.shape()
 
-V = [V1, V2, V3, V4]
+v1 = M*X
+v2 = X
+v3 = X
+v4 = X
 
-D1 = np.ones((data.shape))
-D2 = np.ones((data.shape))
-D3 = np.ones((data.shape))
-D4 = np.ones((data.shape))
+d1 = np.zeros(shape)
+d2 = np.zeros(shape)
+d3 = np.zeros(shape)
+d4 = np.zeros(shape)
+i = 0
+while i < n_iter:
 
-D = [D1, D2, D3, D4]
+    if i%10 == 0:
+        v10 = v1
+        v20 = v2
+        v30 = v3
+        v40 = v4
+    v1 = (Y + mu*(M*X-d1))/(mu+1)
+
+
 

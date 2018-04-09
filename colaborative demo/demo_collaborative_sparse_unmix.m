@@ -64,7 +64,7 @@ m = 400;
 % set library
 library = 3;    %
 % number of pixels
-np = 500;
+np = 100;
 % sparsity of the source
 p = 10;
 
@@ -99,7 +99,8 @@ switch library
         clear B;
     case 3
          load USGS_pruned_10_deg.mat
-          A = B(1:6:end,:);
+          A = B;
+          size(A)
          clear B;
     case 4
          load USGS_pruned_20_deg.mat
@@ -171,12 +172,12 @@ M = A(:,index(1:p));
 
 
 % positivity, addone, ||X||_1 (component-wise sparsity)
-[X_hat_l11] = sunsal(A,Y,'POSITIVITY','yes','VERBOSE','yes','ADDONE','no', ...
-    'lambda', 1e-4,'AL_ITERS',2000, 'TOL', 1e-8);
+[X_hat_l11] = clsunsal(A,Y,'POSITIVITY','yes','VERBOSE','no','ADDONE','no', ...
+    'lambda', 1e-4,'AL_ITERS',3000, 'TOL', 1e-10);
 
 % positivity, addone, ||X||_{2,1} (collaborative sparsity)
 [X_hat_l21] = clsunsal_v1(A,Y,'POSITIVITY','yes','VERBOSE','yes','ADDONE','no', ...
-    'lambda', 1e-4,'AL_ITERS',2000, 'TOL', 1e-8);
+    'lambda', 1e-4,'AL_ITERS',3000, 'TOL', 1e-10);
 
 
 

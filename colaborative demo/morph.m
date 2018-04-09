@@ -3,8 +3,11 @@ function X_hat = morph(X)
 %   Detailed explanation goes here
 r =2;
 SE = strel('square',r);
+%X = X';
 %SE2 = strel('line',r,0);
-X_hat = imclose(X,SE);
+%I = M*X
+X_hat = imopen(X,SE);
+%X_hat = X_hat';
 %X_hat = imerode(X_hat,SE2);    
 end
 

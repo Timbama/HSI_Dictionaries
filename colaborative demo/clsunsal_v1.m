@@ -1,5 +1,7 @@
 function [x,res_p,res_d] = clsunsal_v1(M,y,varargin)
-
+getd = @(p)path(p,path);
+getd('toolbox_signal/');
+getd('toolbox_general/');
 %% [x] = clsunsal_v1(M,y,varargin)
 %
 %  CLSUNSAL -> collaborative sparse unmixing via variable splitting and augmented
@@ -296,6 +298,17 @@ yy = M'*y;
 if x0 == 0
     x= IF*M'*y;
 end
+t = size(y)
+t1 = size(M);
+size(y(:,1))
+test = t(2)
+size(M)
+k = wmpalg('OMP',y(:,i),M);
+size(k)
+for i=1:test
+    x(i,:) = wmpalg('OMP',y(:,i),M);
+    size(x)
+end
 x_hat = morph(x);
 % auxiliary variables
 v1 = M*x;
@@ -339,7 +352,7 @@ while (i <= AL_iters) && ((abs (res_p) > tol1) || (abs (res_d) > tol2))
     % minimize wrt v3
     % min i_+(V3) + mu/2||X-V3-D3||^2_F
     v3 = x-d3;
-    % teste for positivity
+    % test for positivity
     if strcmp(positivity,'yes')
         v3 = max(0,v3);
     end
@@ -349,7 +362,7 @@ while (i <= AL_iters) && ((abs (res_p) > tol1) || (abs (res_d) > tol2))
     % minimize  wrt x
     % mim 1/2||MX-V1-D1||^2_F + 1/2||X-V2-D1||^2_F) + 1/2||X-V3-D3||^2_F
     
-    % teste for sum-to-one 
+    % test for sum-to-one 
     if strcmp(addone,'yes')
        x = IF1*(M'*(v1+d1)+(v2+d2)+(v3+d3)+(v4+d4))+x_aux;
     else
@@ -366,17 +379,16 @@ while (i <= AL_iters) && ((abs (res_p) > tol1) || (abs (res_d) > tol2))
     if mod(i,10) == 1
          
         % primal residue
+        fprintf('test: %f',norm(x-v4,'fro')^2)
         res_p = sqrt(norm(M*x-v1,'fro')^2 + norm(x-v2,'fro')^2+ norm(x-v3,'fro')^2 + norm(x-v4,'fro')^2);
         % dual residue
         res_d = mu*norm(M'*(v1-v10)+v2-v20+v3-v30-v40+v4,'fro');
         if  strcmp(verbose,'yes')
             fprintf(' i = %f, res_p = %f, res_d = %f\n',i,res_p,res_d)
         end
-        % update mu
+%         % update mu
 %         if res_p > 10*res_d
-%             mu = mu*2;
-%             d1 = d1/2;
-%             d2 = d2/2;
+%             mu = mu*2; = d2/2;
 %             d3 = d3/2;
 %             d4 = d4/2;
 %             mu_changed = 1;
@@ -388,6 +400,8 @@ while (i <= AL_iters) && ((abs (res_p) > tol1) || (abs (res_d) > tol2))
 %             d4 = d4*2;
 %             mu_changed = 1;
 %         end
+%             d1 = d1/2;
+%             d2
         if  mu_changed
            % update IF and IF1
 
