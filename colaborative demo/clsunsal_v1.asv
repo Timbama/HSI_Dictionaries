@@ -312,13 +312,10 @@ end
 x_hat = morph(x);
 % auxiliary variables
 v1 = M*x;
-size(v1)
-size(M)
 v2 = x;
 v3 = x;
 v4 = x; %This is v3 for the centrlaize collaborative 
 size(x)
-
 % scaled Lagrange Multipliers
 d1  = 0*v1;
 d2  = 0*v2;
@@ -351,6 +348,7 @@ while (i <= AL_iters) && ((abs (res_p) > tol1) || (abs (res_d) > tol2))
     % minimize with respect to v2
     % min lambda ||V2||_{2,1} + mu/2||X-V2-D1||^2_F
     v2 =  vector_soft_row(x-d2,lambda/mu);
+    
     % minimize wrt v3
     % min i_+(V3) + mu/2||X-V3-D3||^2_F
     v3 = x-d3;
