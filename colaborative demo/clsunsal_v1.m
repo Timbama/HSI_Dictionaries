@@ -275,7 +275,7 @@ end
 %  Constants and initializations
 %---------------------------------------------
 mu_AL = 0.01;
-mu = 10*mean(lambda(:)) + mu_AL;
+mu = 10*mean(lambda(:)) + mu_AL
 
 %F = M'*M+mu*eye(p);
 [UF,SF] = svd(M'*M);

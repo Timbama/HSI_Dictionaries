@@ -5,7 +5,7 @@ import random
 from scipy.io import loadmat
 import os.path
 from USG_data_paths import dataPath, sensor_type, spectra_types
-def initialize_file(filename):
+def initialize_file(filename, key=None):
     extension = os.path.splitext(filename)[1]
     if extension == '.tiff':
         data = tif.imread(filename)
@@ -16,7 +16,7 @@ def initialize_file(filename):
         name = first_lower(name)
         mat_file = loadmat(filename)
         mat_file.keys()
-        data = mat_file[name]
+        data = mat_file[key]
         data = np.array(data)
         return data
     else:
@@ -169,9 +169,9 @@ def prune_library(library, min_angle):
             compare = np.array(compare)
             compare_norm = np.linalg.norm(compare)
             diff = np.mean(np.arccos((sample*compare)/(sample_norm*compare_norm)))
-            print(diff)
             if diff < min_angle:
                 to_delete.append(key1)
                 break
-    print(to_delete)
+    for k in to_delete:
+        library.pop(k, None)
     return library

@@ -14,13 +14,13 @@ def construct_cube(pixel, upper_corner, shape, size):
             image[i + upper_corner[0], j + upper_corner[1],:] = pixel[0,:]
     return image
 def create_hsi(samples):
-    test_image = np.zeros((75,75,224))
+    test_image = np.zeros((75,75,samples.shape[1]))
     n_samples = samples.shape[0]
     upper_corner = [5,5]
     shape = (75,75)
     for i in range(5):
         i += 1
-        temp = np.zeros((0,224))
+        temp = np.zeros((0,samples.shape[1]))
         if i == 1:
             for j in range(n_samples):
                 pixel = samples[j,:]
@@ -30,7 +30,7 @@ def create_hsi(samples):
                 upper_corner[0] += 15 
         elif i == 2:
             for j in range(n_samples):
-                temp = np.zeros((0,224))
+                temp = np.zeros((0,samples.shape[1]))
                 for k in range(len(two_member[j])):
                     temp = np.vstack((temp, samples[two_member[j][k],:])) 
                 temp = linear_mix(temp)
@@ -39,7 +39,7 @@ def create_hsi(samples):
                 upper_corner[0] += 15
         elif i == 3:  
             for j in range(n_samples):
-                temp = np.zeros((0,224))
+                temp = np.zeros((0,samples.shape[1]))
                 for k in range(len(three_member[j])):
                     temp = np.vstack((temp, samples[three_member[j][k],:])) 
                 temp = linear_mix(temp)
@@ -48,7 +48,7 @@ def create_hsi(samples):
                 upper_corner[0] += 15 
         elif i == 4: 
             for j in range(n_samples):
-                temp = np.zeros((0,224))
+                temp = np.zeros((0,samples.shape[1]))
                 for k in range(len(four_member[j])):
                     temp = np.vstack((temp, samples[four_member[j][k],:])) 
                 temp = linear_mix(temp)
