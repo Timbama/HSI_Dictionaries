@@ -70,7 +70,7 @@ p = 10;
 
 % Y = AX + N;
 % set SNR in dBs  (SNR = ||MX||^2_F / ||N||^2_F)
-SNR =30; 
+SNR =10; 
 
 % 
 SHAPE_PARAMETER = 1;      %(Dirichlet parameter) abundances uniformely 
@@ -143,7 +143,7 @@ M = A(:,index(1:p));
          'violation_extremes',[1,1.2], ....
          'snr', SNR, ...
          'noise_shape','uniform');
-     
+save('SNR 10 data','Y')     
  % write X wrt A
  X = zeros(m,np);
  X(index(1:p),:) = Xaux;
@@ -178,7 +178,7 @@ M = A(:,index(1:p));
 % positivity, addone, ||X||_{2,1} (collaborative sparsity)
 [X_hat_l21] = clsunsal_v1(A,Y,'POSITIVITY','yes','VERBOSE','yes','ADDONE','no', ...
     'lambda', 1e-4,'AL_ITERS',3000, 'TOL', 1e-10);
-
+recon = X_hat_121
 
 
 %%

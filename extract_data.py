@@ -4,7 +4,7 @@ import csv
 import random
 from scipy.io import loadmat
 import os.path
-from USG_data_paths import dataPath, sensor_type, spectra_types
+from USGS_data_path_Laptop import dataPath, sensor_type, spectra_types
 def initialize_file(filename, key=None):
     extension = os.path.splitext(filename)[1]
     if extension == '.tiff':

@@ -70,7 +70,7 @@ p = 10;
 
 % Y = AX + N;
 % set SNR in dBs  (SNR = ||MX||^2_F / ||N||^2_F)
-SNR =100; 
+SNR =10; 
 
 % 
 SHAPE_PARAMETER = 1;      %(Dirichlet parameter) abundances uniformely 
@@ -143,7 +143,7 @@ M = A(:,index(1:p));
          'violation_extremes',[1,1.2], ....
          'snr', SNR, ...
          'noise_shape','uniform');
-save('SNR 100 data','Y')     
+save('SNR 10 data','Y')     
  % write X wrt A
  X = zeros(m,np);
  X(index(1:p),:) = Xaux;
@@ -231,7 +231,9 @@ stem(1:m, ((sum(abs(X_hat_l21),2)' > np/p/20))*2, 'r')
 stem(1:m, (sum(abs(X_hat_l11),2)' > np/p/20), 'g')
 title('Support detection')
 legend('X','l21', 'l1')
-
+recon = A*X_hat_121;
+diff = recon - Y;
+norm(diff,'fro')
 
 
 
