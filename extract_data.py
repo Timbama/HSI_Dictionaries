@@ -4,7 +4,7 @@ import csv
 import random
 from scipy.io import loadmat
 import os.path
-from USGS_data_path_Laptop import dataPath, sensor_type, spectra_types
+from USG_data_paths import dataPath, sensor_type, spectra_types
 def initialize_file(filename, key=None):
     extension = os.path.splitext(filename)[1]
     if extension == '.tiff':
@@ -155,7 +155,8 @@ def convert_library(library):
     for keys in sorted(library.keys()):
         data[counter, :] = library[keys]
         counter += 1
-    return data
+    keys = sorted(library.keys())
+    return data, keys
 def prune_library(library, min_angle):
     r = list(library.keys())
     c = list(library.keys())
@@ -175,3 +176,6 @@ def prune_library(library, min_angle):
     for k in to_delete:
         library.pop(k, None)
     return library
+def remove_bands(data, bands):
+    x = np.delete(data, bands, axis=0)
+    return x
