@@ -4,14 +4,14 @@ from extract_data import initialize_file
 from skimage.morphology import square
 from create_hsi import create_hsi
 import matplotlib.pyplot as plt
-mu = .004
+mu = .1
 lamb = .1
-gamma = .006
+gamma = .1
 n_iter = 1000
-width = 5
+width = 2
 strel = square(width)
 M = initialize_file('USGS_pruned_10_deg.mat','B')
-data = initialize_file('SNR 30 data.mat','Y')
+data = initialize_file('SNR 10 data.mat','Y')
 actual = initialize_file('SNR 60 data.mat','Y')
 actual = np.transpose(actual)
 data = np.transpose(data)
@@ -50,7 +50,7 @@ print("Norm of the difference regular", error_reg)
 print("average error regular", avg_error_reg)
 print("Standad deviation of error regular", std_error_reg)
 print("max error regular", max_error_reg)
-plt.subplot(311); plt.imshow(actual); plt.title('Origional')
+plt.subplot(311); plt.imshow(actual); plt.title('With Noise')
 plt.subplot(312); plt.imshow(recon); plt.title('reconstruction')
 plt.subplot(313); plt.imshow(recon_reg); plt.title('regular')
 plt.show()
