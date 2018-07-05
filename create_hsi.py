@@ -15,7 +15,7 @@ def construct_cube(pixel, upper_corner, shape, size):
     return image
 def create_hsi(samples):
     test_image = np.zeros((75,75,samples.shape[1]))
-    n_samples = samples.shape[0]
+    n_samples = samples.shape[1]
     upper_corner = [5,5]
     shape = (75,75)
     for i in range(5):

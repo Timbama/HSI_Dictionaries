@@ -18,6 +18,7 @@ def initialize_file(filename, key=None):
         mat_file.keys()
         data = mat_file[key]
         data = np.array(data)
+        #data = np.transpose(data)
         return data
     else:
         data = np.empty(1)

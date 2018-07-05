@@ -29,7 +29,6 @@ def threshold_mask(mask):
     mask_low = np.invert(mask_high)
     print(mask.shape)
     return mask_high, mask_low
-
 def addPadding(data):
     data_pad = np.empty((data.shape[0]+2, data.shape[1]+2, 0))
     for x in range(data.shape[2]):

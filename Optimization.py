@@ -17,13 +17,26 @@ def comp_soft(X, tau):
     Y = np.multiply(Y,X)
     return Y
 def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
+    '''
+    Args:
+        M: dictionary of shape bands x atoms
+        Y: data of shqape bands x samples
+        lamb: primal constant
+        gamma: dual constant
+        mu: regularization constant
+        strel: structuring element
+        n_iter: number of iterations
+        verbose: determins verbosity
+    Returns:
+        This function returns a sparse matrix representation of the input dat with respect to the dictionary
+
+    '''
+    shape = (M.shape[1], Y.shape[1])
     #initilize data and sparse representation
-    X = sparse_encode(Y, M, max_iter=1)
-    X = np.transpose(X)
-    M = np.transpose(M)
-    Y = np.transpose(Y)
+    #X = sparse_encode(Y, M, max_iter=1)
+    X = np.random.rand(shape[0], shape[1])
+    print(X.shape)
     #initilize the seperable representations of X
-    shape = X.shape
     v1 = np.dot(M,X)
     v2 = X
     v3 = X
@@ -69,11 +82,26 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
             print("iteration:" + str(i) + "\tprimal:" + str(prime) + "\tdual:" + str(dual))
     return X
 def reg_opt(M, Y, lamb, mu, n_iter=2000, verbose=True):
+    '''
+    Args:
+        M: dictionary of shape bands x atoms
+        Y: data of shqape bands x samples
+        lamb: primal constant
+        gamma: dual constant
+        mu: regularization constant
+        n_iter: number of iterations
+        verbose: determins verbosity
+    Returns:
+        This function returns a sparse matrix representation of the input data with respect to the dictionary
+
+    '''
      #initilize data and sparse representation
-    X = sparse_encode(Y, M, max_iter=1)
-    X = np.transpose(X)
-    M = np.transpose(M)
-    Y = np.transpose(Y)
+    #X = sparse_encode(Y, M, max_iter=1)
+    MT = np.transpose(M)
+    MTM = np.dot(MT,M)
+    IF = np.linalg.inv(MTM)
+    X = np.dot(np.dot(IF,MT),Y)
+    
     #initilize the seperable representations of X
     shape = X.shape
     v1 = np.dot(M,X)
@@ -86,8 +114,7 @@ def reg_opt(M, Y, lamb, mu, n_iter=2000, verbose=True):
     i = 0
     #Initilize the parameters for the X update
     I = np.identity(M.shape[1])
-    MT = np.transpose(M)
-    MTM= np.dot(MT,M)
+    
     while i < n_iter:
         if i%10 == 0 and verbose:
             v10 = v1
@@ -112,4 +139,14 @@ def reg_opt(M, Y, lamb, mu, n_iter=2000, verbose=True):
             prime = np.sqrt(np.linalg.norm(np.dot(M,X)-v1,'fro')**2 + np.linalg.norm(X-v2,'fro')**2 + np.linalg.norm(X-v4,'fro')**2)
             dual = mu*np.linalg.norm(np.dot(np.transpose(M),(v1-v10))+v2-v20+v4-v40,'fro')
             print("iteration:" + str(i) + "\tprimal:" + str(prime) + "\tdual:" + str(dual))
+            if prime > 10*dual:
+                mu = mu*2
+                d1 = d1/2
+                d2 = d2/2
+                d4 = d4/2
+            elif dual > 10*prime:
+                mu = mu/2
+                d1 = d1*2
+                d2 = d2*2
+                d4 = d4*2
     return X
