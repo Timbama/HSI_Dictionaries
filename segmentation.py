@@ -12,7 +12,8 @@ def create_SAD_mat(data):
                 for n in range(3):
                     other = extract_pixel(z+x,n+y,data).transpose()
                     norm_other = np.linalg.norm(other)
-                    mask[x][y] = np.mean(np.arccos((center*other)/(norm*norm_other)))
+                    spec_angle = np.arccos((center*other)/(norm*norm_other))
+                    mask[x][y] = np.mean(spec_angle)
         #if x%10 == 0:
            # print('X ',x,'Y ',y)
     mask = normalize(mask)  

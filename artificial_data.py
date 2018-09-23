@@ -1,7 +1,5 @@
-#%%
-%pylab
+
 import matplotlib
-matplotlib.use('WXAgg')
 from Optimization import morph_opt, reg_opt
 import numpy as np
 from extract_data import initialize_file
@@ -30,7 +28,7 @@ print(image.shape)
 image = np.reshape(image, (image.shape[0]*image.shape[1],image.shape[2]))
 print(image.shape)
 
-view_cube(image, bands=[29, 19, 9])
+#view_cube(image, bands=[29, 19, 9])
 X_reg = reg_opt(dictionary, image,lamb,mu) 
 X = morph_opt(dictionary, image, lamb, gamma, mu, strel, n_iter=2000)
 recon = np.dot(dictionary,X)

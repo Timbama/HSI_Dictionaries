@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.decomposition import sparse_encode
 from skimage.morphology import opening, closing, erosion, dilation
+from segmentation import create_SAD_mat
 def row_soft(X, tau):
     nu = np.sqrt(np.sum(np.power(X,2), axis=0))
     zero = np.zeros(nu.shape)
@@ -16,6 +17,16 @@ def comp_soft(X, tau):
     Y = np.sign(X)*np.maximum((np.abs(X)-tau),0)
     Y = np.multiply(Y,X)
     return Y
+def create_nbd(Y, size, center):
+    img = np.reshape(Y, (250,190,Y.shape[0]))
+    sub_img = img[center-size:center+size,center-size:center+size, :]
+    return sub_img
+def calc_SAD(img):
+    center = (np.floor(img.shape[0]/2.0), np.floor(img.shape[1]/2.0))
+    for i in range(img.shape[0]):
+        for j in rang(img.shape[1]):
+            if (i,j) != center:
+                
 def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
     '''
     Args:
@@ -51,8 +62,9 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
     I = np.identity(M.shape[1])
     MT = np.transpose(M)
     MTM= np.dot(MT,M)
+    x_hat = opening(X, strel)
+
     while i < n_iter:
-        x_hat = opening(X, strel)
         if i%10 == 0 and verbose:
             v10 = v1
             v20 = v2
@@ -76,6 +88,7 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
         d3 = d3 - X + v3
         d4 = d4 - X + v4
         i+=1
+        x_hat = opening(X, strel)
         if i%10 == 0 and verbose:
             prime = np.sqrt(np.linalg.norm(np.dot(M,X)-v1,'fro')**2 + np.linalg.norm(X-v2,'fro')**2 + np.linalg.norm(X-v3,'fro')**2 + np.linalg.norm(X-v4,'fro')**2)
             dual = mu*np.linalg.norm(np.dot(np.transpose(M),(v1-v10))+v2-v20+v3-v30+v4-v40,'fro')
@@ -125,11 +138,11 @@ def reg_opt(M, Y, lamb, mu, n_iter=2000, verbose=True):
         term_b = np.dot(MT,(np.add(v1,d1)))
         term_c = v2+d2
         term_e = v4+d4
-        X = np.dot(term_a,(term_b+term_c+term_e))
         #Update the seprable versions of X
         v1 = (Y + mu*(np.dot(M,X)-d1))/(mu+1)
         v2 = row_soft((X-d2),lamb/mu)
         v4 = X - d4
+        X = np.dot(term_a,(term_b+term_c+term_e))
         #Update the Lagranians
         d1 = d1 - np.dot(M,X) + v1
         d2 = d2 - X + v2
@@ -150,3 +163,5 @@ def reg_opt(M, Y, lamb, mu, n_iter=2000, verbose=True):
                 d2 = d2*2
                 d4 = d4*2
     return X
+#def vec_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
+    
