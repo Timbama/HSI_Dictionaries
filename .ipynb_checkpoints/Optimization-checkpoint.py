@@ -100,8 +100,8 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
         d3 = d3 - X + v3
         d4 = d4 - X + v4
         i+=1
-        x_hat = opening(X, strel)
         if i%10 == 0 and verbose:
+            x_hat = closing(X, strel)
             prime = np.sqrt(np.linalg.norm(np.dot(M,X)-v1,)**2 + np.linalg.norm(X-v2,)**2 + np.linalg.norm(X-v3,)**2 + np.linalg.norm(X-v4,)**2)
             dual = mu*np.linalg.norm(np.dot(np.transpose(M),(v1-v10))+v2-v20+v3-v30+v4-v40,)
             print("iteration:" + str(i) + "\tprimal:" + str(prime) + "\tdual:" + str(dual))

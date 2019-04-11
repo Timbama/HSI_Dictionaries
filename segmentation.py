@@ -1,15 +1,15 @@
 import numpy as np
 from extract_data import initialize_file, extract_pixel
 from sklearn.preprocessing import normalize
-def create_SAD_mat(data):
+def create_SAD_mat(data, winsize=3):
     print(data.shape)
-    mask = np.zeros(shape=(data.shape[0]-2,data.shape[1]-2))
-    for x in range(data.shape[0]-2):
-        for y in range(data.shape[1]-2):
+    mask = np.zeros(shape=(data.shape[0]-winsize+1,data.shape[1]-winsize+1))
+    for x in range(data.shape[0]-winsize+1):
+        for y in range(data.shape[1]-winsize+1):
             center = extract_pixel(x,y, data).transpose()
             norm = np.linalg.norm(center)
-            for z in range(3):
-                for n in range(3):
+            for z in range(winsize):
+                for n in range(winsize):
                     other = extract_pixel(z+x,n+y,data).transpose()
                     norm_other = np.linalg.norm(other)
                     spec_angle = np.arccos((center*other)/(norm*norm_other))
@@ -30,8 +30,8 @@ def threshold_mask(mask):
     mask_low = np.invert(mask_high)
     print(mask.shape)
     return mask_high, mask_low
-def addPadding(data):
-    data_pad = np.empty((data.shape[0]+2, data.shape[1]+2, 0))
+def add_padding(data, winsize):
+    data_pad = np.empty((data.shape[0]+winsize-1, data.shape[1]+winsize-1, 0))
     for x in range(data.shape[2]):
         data_temp = np.pad(data[:,:,x], 1, 'mean')
         data_temp = np.expand_dims(data_temp, axis=0)

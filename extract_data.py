@@ -5,6 +5,7 @@ import random
 from scipy.io import loadmat
 import os.path
 from USG_data_paths import dataPath, sensor_type, spectra_types
+import h5py
 def initialize_file(filename, key=None):
     extension = os.path.splitext(filename)[1]
     if extension == '.tiff':
@@ -13,11 +14,11 @@ def initialize_file(filename, key=None):
     elif extension == '.mat':
         name = os.path.splitext(filename)[0]
         name = os.path.basename(name)
-        name = first_lower(name)
-        mat_file = loadmat(filename)
-        mat_file.keys()
-        data = mat_file[key]
-        data = np.array(data)
+        #name = first_lower(name)
+        with h5py.File(filename, 'r') as f:
+            f.keys()
+            data = f[key]
+            data = np.array(data)
         #data = np.transpose(data)
         return data
     else:
@@ -178,5 +179,5 @@ def prune_library(library, min_angle):
         library.pop(k, None)
     return library
 def remove_bands(data, bands):
-    x = np.delete(data, bands, axis=0)
+    x = np.delete(data, bands, axis=1)
     return x
