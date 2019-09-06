@@ -1,10 +1,10 @@
 from time import time
 import numpy as np
-from segmentation import create_SAD_mat, apply_mask, addPadding, threshold_mask
+from segmentation import create_SAD_mat, apply_mask, add_padding, threshold_mask
 from extract_data import initialize_file
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
-from USGS_data_path_Laptop import dataPath_HSI
+from USGS_data_paths import dataPath_HSI
 
 file_name = dataPath_HSI + 'paviaU.mat'
 low_path = 'low_mask.npy'

@@ -37,8 +37,8 @@ sensor_type = {'splib07a': 'ASCIIdata_splib07a',
 'Sentinel12': 'ASCIIdata_splib07b_rsSentinel2',
 'WorldView3': 'ASCIIdata_splib07b_rsWorldView3'}
 
-dataPath = 'G:/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/ASCIIdata/'
-dataPath_HSI = 'G:/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/Data/'
+dataPath = 'C:/Users/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/ASCIIdata/'
+dataPath_HSI = 'C:/Users/timba/Documents/OneDrive for Business/OneDrive - Kennesaw State University/data/Data/'
 
 two_member = [[0,1],[1,2], [2,3], [3,4], [4,0]]
 three_member= [[0,1,2], [1,2,3], [2,3,4], [3,4,0], [4,0,1]]

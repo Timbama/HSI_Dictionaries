@@ -5,8 +5,8 @@ from sklearn.decomposition import SparseCoder
 
 def initialize_dict(n_components, n_features):
     n_nonzero_coefs = 20
-    w, X, y= make_sparse_coded_signal(n_samples = 1, n_components=n_components, n_features=n_features, n_nonzero_coefs=n_nonzero_coefs)
-    return X
+    w, D, y= make_sparse_coded_signal(n_samples = 1, n_components=n_components, n_features=n_features, n_nonzero_coefs=n_nonzero_coefs)
+    return D
     
 def omp_sparse(dictionary, train_data):
 
