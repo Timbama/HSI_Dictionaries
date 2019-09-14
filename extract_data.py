@@ -15,7 +15,7 @@ def initialize_file(filename, key=None):
         name = os.path.splitext(filename)[0]
         name = os.path.basename(name)
         #name = first_lower(name)
-        with h5py.File(filename, 'r') as f:
+        with loadmat(filename) as f:
             f.keys()
             data = f[key]
             data = np.array(data)
