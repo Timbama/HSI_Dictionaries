@@ -1,4 +1,5 @@
 import matplotlib
+import os
 matplotlib.use('WXAgg') 
 import numpy as np
 from Optimization import morph_opt, reg_opt
@@ -6,10 +7,12 @@ from extract_data import initialize_file, normalize, get_spectral_library, conve
 from skimage.morphology import square
 from sklearn.preprocessing import Imputer
 import spectral as spec
+from USG_data_paths import dataPath
 from segmentation import add_padding
 spec.settings.WX_GL_DEPTH_SIZE = 16
 bands = [0,1,103,104,105,106,107,108,109,110,111,112,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,220,221,222,223]
-img = initialize_file('Cuprite.mat', key='X')
+path = os.path.join(dataPath,'hyperspectral_images','Cuprite.mat')
+img = initialize_file(path, key='X')
 #img_shape = image.shape
 img = img[425:614,86:335,:]
 print('Image shape:', img.shape)

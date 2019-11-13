@@ -14,13 +14,13 @@ def construct_cube(pixel, upper_corner, shape, size):
             image[i + upper_corner[0], j + upper_corner[1],:] = pixel[0,:]
     return image
 def create_hsi(samples):
-    test_image = np.zeros((75,75,samples.shape[1]))
+    test_image = np.zeros((75,75,samples.shape[0]))
     n_samples = samples.shape[1]
     upper_corner = [5,5]
     shape = (75,75)
     for i in range(5):
         i += 1
-        temp = np.zeros((0,samples.shape[1]))
+        temp = np.zeros((0,samples.shape[0]))
         if i == 1:
             for j in range(n_samples):
                 pixel = samples[j,:]

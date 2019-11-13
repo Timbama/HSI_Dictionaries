@@ -2,6 +2,9 @@ import numpy as np
 from sklearn.decomposition import sparse_encode
 from skimage.morphology import opening, closing, erosion, dilation
 from segmentation import create_SAD_mat
+from dictionary_update import update_dict
+from sklearn.preprocessing import normalize
+from evaluate import calculate_rsme
 def row_soft(X, tau):
     nu = np.sqrt(np.sum(np.power(X,2), axis=0))
     zero = np.zeros(nu.shape)
@@ -36,10 +39,19 @@ def vector_morph(X, M, shape, depth=6):
     var_idx_cut = var_idx[:depth]
     img = np.reshape(Y, (depth, shape[0], shape[1]))
     create_SAD_mat()
+def morph(X, strel, operation="opening"):
+    if operation == "erosion":
+        X_out = erosion(X)
+    elif operation == "dilation":
+        X_out = dilation(X)
+    elif operation == "closing":
+        X_out  = closing(X)
+    else:
+        X_out = opening(X)
+    return X_out
 
 
-
-def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
+def morph_opt(M, Y, lamb, gamma, mu, strel, operation, n_iter=2000, verbose=True):
     '''
     Args:
         M: dictionary of shape bands x atoms
@@ -59,7 +71,11 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
     MT = np.transpose(M)
     MTM = np.dot(MT,M)
     IF = np.linalg.inv(MTM)
+    inverse_max = np.max(IF)
+    #X = np.random.rand(shape[0],shape[1])
     X = np.dot(np.dot(IF,MT),Y)
+    X = normalize(X)
+    X_max = np.max(X)
     print(X.shape)
     #initilize the seperable representations of X
     v1 = np.dot(M,X)
@@ -74,7 +90,7 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
     i = 0
     #Initilize the parameters for the X update
     I = np.identity(M.shape[1])
-    x_hat = opening(X, strel)
+    x_hat = erosion(X, strel)
 
     while i < n_iter:
         if i%10 == 0 and verbose:
@@ -99,13 +115,37 @@ def morph_opt(M, Y, lamb, gamma, mu, strel, n_iter=2000, verbose=True):
         d2 = d2 - X + v2
         d3 = d3 - X + v3
         d4 = d4 - X + v4
-        i+=1
-        x_hat = opening(X, strel)
-        if i%10 == 0 and verbose:
+        
+        x_hat = morph(X, strel, operation)
+        M = update_dict(M,Y,X)
+        MT = np.transpose(M)
+        MTM = np.dot(MT,M)
+        if (i%10 == 0 and verbose):
+            X_max = np.max(X)
+            v1_max = np.max(v1)
+            v2_max = np.max(v2)
+            v3_max = np.max(v3)
+            v4_max = np.max(v4)
+            M_max = np.max(M)
+            term_1 = np.linalg.norm(np.dot(M,X)-v1,)**2
+            term_2 = np.linalg.norm(X-v2,)**2
+            term_3 = np.linalg.norm(X-v3,)**2
+            term_4 = np.linalg.norm(X-v4,)**2
             prime = np.sqrt(np.linalg.norm(np.dot(M,X)-v1,)**2 + np.linalg.norm(X-v2,)**2 + np.linalg.norm(X-v3,)**2 + np.linalg.norm(X-v4,)**2)
-            dual = mu*np.linalg.norm(np.dot(np.transpose(M),(v1-v10))+v2-v20+v3-v30+v4-v40,)
-            print("iteration:" + str(i) + "\tprimal:" + str(prime) + "\tdual:" + str(dual))
-    return X
+            dual = mu*np.linalg.norm(np.dot(np.transpose(M),(v1-v10))+v2-v20+v3-v30+v4-v40)
+            rsme = calculate_rsme(Y,np.dot(M,X))
+            print("iteration:" + str(i) + "\tprimal:" + str(prime) + "\tdual:" + str(dual) + "\trsme:" + str(rsme))
+            if prime > 10*dual:
+                mu = mu*2
+                d1 = d1/2
+                d2 = d2/2
+                d3 = d3/2
+                d4 = d4/2
+            elif dual > 10*prime:
+                mu = mu/2
+                d1 = d1*2
+        i+=1
+    return X,M
 def reg_opt(M, Y, lamb, mu, n_iter=2000, verbose=True):
     '''
     Args:

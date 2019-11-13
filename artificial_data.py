@@ -30,11 +30,11 @@ data = M #shape: bands x samples
 print("Data shape:", data.shape)
 actual = M #shape: bands x samples
 sample = data[:,0:5]
+sample = sample.transpose()
 print(sample.shape)
 image = create_hsi(sample)
 print(image.shape)
 image = np.reshape(image, (image.shape[0]*image.shape[1],image.shape[2]))
-image = image.transpose()
 print(image.shape)
 
 #view_cube(image, bands=[29, 19, 9])
